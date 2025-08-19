@@ -1,0 +1,47 @@
+/*
+ * Global styles for the Emoji Games platform.
+ *
+ * You can extend this file to include additional styles or import
+ * frameworks like Tailwind via CDN links in your HTML pages.  For
+ * brevity, the default theme uses only a few utility classes to
+ * provide margins and responsive behaviour.
+ */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+
+.avatar {
+    font-size: 2rem;
+}
+
+.button {
+    background-color: #0070f3;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

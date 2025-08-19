@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Number Guess</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script type="module">
+    import '/sdk/emoji-games-sdk.js';
+    import '/assets/js/main.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      const startBtn = document.getElementById('start');
+      const timerEl = document.getElementById('timer');
+      const scoreEl = document.getElementById('score');
+      const area = document.getElementById('game-area');
+      const resultEl = document.getElementById('result');
+      startBtn.addEventListener('click', async () => {
+        startBtn.disabled = true;
+        scoreEl.textContent = '0';
+        resultEl.textContent = '';
+        let run;
+        try { run = await window.EmojiGamesSDK.startRun('emoji-number-guess'); } catch (e) { startBtn.disabled = false; return; }
+        let score = 0;
+        let timeLeft = 30;
+        timerEl.textContent = timeLeft + 's';
+        const interval = setInterval(() => { timeLeft--; timerEl.textContent = timeLeft + 's'; if (timeLeft <= 0) { clearInterval(interval); finish(); } }, 1000);
+        function onClick() { score++; scoreEl.textContent = String(score); }
+        area.addEventListener('click', onClick);
+        async function finish() {
+          area.removeEventListener('click', onClick);
+          try {
+            const res = await window.EmojiGamesSDK.submitRun('emoji-number-guess', { score: score, duration_ms: 30000, stats: { max_combo: score }, nonce: run.nonce, client_sig: '' });
+            resultEl.textContent = 'Coins earned: ' + res.coins_earned;
+          } catch (err) { resultEl.textContent = 'Error: ' + err.message; }
+          startBtn.disabled = false;
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container"><div class="header"><div class="avatar">😀</div><h1>Emoji Number Guess</h1></div><button id="start" class="button">Start</button><div style="margin-top:0.5rem;">Time: <span id="timer">30s</span> | Score: <span id="score">0</span></div><div id="game-area" style="height:280px;background:#fafafa;border:1px solid #ddd;margin-top:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span>Guess the numbers! (placeholder)</span></div><div id="result" style="margin-top:1rem;font-weight:bold;"></div></div></body>
+</html>
